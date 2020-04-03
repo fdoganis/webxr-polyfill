@@ -24,8 +24,9 @@
 	</style>
 	<link rel="stylesheet" href="../common.css"/>
 	<script src="../libs/three.js"></script>
-    <script src="../libs/dat.gui.min.js"></script>
+    	<script src="../libs/dat.gui.min.js"></script>
 	<script src="../libs/three-gltf-loader.js"></script>
+	<script src="../libs/three-obj-exporter.js"></script>
 <!--    
         <script type="module" src="../../polyfill/XRPolyfill.js"></script>
         <script nomodule src="../../dist/webxr-polyfill.js"></script>
@@ -56,6 +57,16 @@
             this._messageEl.style.left = '10px'
             this._messageEl.style.color = 'white'
             this._messageEl.style['font-size'] = '16px'
+		
+			// download button + event
+			this.downloadModelButton = document.createElement('button')
+			this.downloadModelButton.setAttribute('class', 'download-model-button')
+			this.downloadModelButton.innerText = 'Download'
+			this.el.appendChild(this.downloadModelButton)
+			this.downloadModelButton.addEventListener('click', ev => {
+				this.downloadModel()
+			})
+
 
             // add dat.GUI to the left HUD.  We hid it in stereo viewing, so we don't need to 
             // figure out how to duplicate it.
@@ -178,6 +189,30 @@
             }
         }
 
+	    downloadModel() {
+			this._exportToObj();
+		}
+		
+		_exportToObj() {
+
+				var exporter = new THREE.OBJExporter();
+				var result = exporter.parse( this.faceMesh );
+				this._download("face.obj", result);				
+		}
+
+		_download(filename, text) {
+		  let element = document.createElement('a');
+		  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		  element.setAttribute('download', filename);
+
+		  element.style.display = 'none';
+		  document.body.appendChild(element);
+
+		  element.click();
+
+		  document.body.removeChild(element);
+		}
+	    
         _handleRemoveWorldAnchor(event) {
             let anchor = event.detail
             if (anchor instanceof XRFaceAnchor) {
