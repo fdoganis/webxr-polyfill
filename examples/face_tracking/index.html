@@ -71,9 +71,9 @@
             // add dat.GUI to the left HUD.  We hid it in stereo viewing, so we don't need to 
             // figure out how to duplicate it.
             this.params = {
-                face: 'occlusion',
+                face: 'transparent',
                 ducky: false,
-                glasses: true
+                glasses: false
             };
 
 
@@ -84,7 +84,7 @@
             gui.add( this.params, 'ducky' );
             gui.add( this.params, 'glasses' );
             gui.domElement.id = 'gui';
-            gui.open();
+            gui.close();
             this.gui = gui
         }
 
